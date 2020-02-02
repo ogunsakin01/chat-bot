@@ -1,6 +1,5 @@
 <template>
     <div class="form-group">
-        <label>Airport *</label>
         <v-autocomplete :items="items" v-model="airport" :get-label="getLabel"
                         :component-item='template' @update-items="updateItems">
         </v-autocomplete>

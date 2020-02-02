@@ -1790,14 +1790,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-// import Airline from "./inputs/Airline";
-// import Airport from "./inputs/Airport";
-// import Message from "./inputs/Message";
+var actions = __webpack_require__(/*! ./../actions */ "./resources/js/actions.js");
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  // components: {Message, Airport, Airline},
   data: function data() {
     return {
       flight: {
@@ -1816,23 +1811,25 @@ __webpack_require__.r(__webpack_exports__);
           "cabin": "All"
         }
       },
-      message: {
-        'sender': '',
-        'title': '',
-        'message': '',
-        'data': {}
-      },
+      user: 'User',
       messages: [],
+      message: {
+        sender: '',
+        message: ''
+      },
       error: {
         status: false,
         message: ''
-      }
+      },
+      process: 'welcome'
     };
   },
   mounted: function mounted() {
+    this.start();
     this.$root.$on('airport', this.saveAirport);
-    this.$root.$on('airline', this.saveAirport);
-    this.$root.$on('message', this.saveAirport);
+    this.$root.$on('airline', this.saveAirline);
+    this.$root.$on('message', this.saveMessage);
+    this.$root.$on('selected', this.saveSelected);
   },
   methods: {
     shadow: function shadow(status, key) {
@@ -1841,9 +1838,34 @@ __webpack_require__.r(__webpack_exports__);
       if (status == 1) $('.message_' + key).addClass("shadow");
       $('.message_' + key).removeClass("shadow-none");
     },
-    saveAirport: function saveAirport(airport) {},
-    saveAirline: function saveAirline(airline) {},
-    saveMessage: function saveMessage(message) {}
+    start: function start() {
+      var process = actions[this.$data.process];
+      this.messages.push({
+        sender: 'Bot',
+        message: process.title
+      });
+      this.$router.push({
+        name: process.input,
+        params: process.data
+      });
+    },
+    saveAirport: function saveAirport(airport) {
+      console.log(airport);
+    },
+    saveAirline: function saveAirline(airline) {
+      console.log(airline);
+    },
+    saveMessage: function saveMessage(message) {
+      console.log(message);
+    },
+    saveSelected: function saveSelected(option) {
+      this.messages.push({
+        sender: this.user,
+        message: option.message
+      });
+      this.process = option.action;
+      this.start();
+    }
   }
 });
 
@@ -1859,7 +1881,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _plugins_Airlinesitemtemplate_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../plugins/Airlinesitemtemplate.vue */ "./resources/js/components/plugins/Airlinesitemtemplate.vue");
-//
 //
 //
 //
@@ -1933,7 +1954,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _plugins_Airportsitemtemplate_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../plugins/Airportsitemtemplate.vue */ "./resources/js/components/plugins/Airportsitemtemplate.vue");
-//
 //
 //
 //
@@ -2056,6 +2076,35 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return true;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inputs/Options.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/inputs/Options.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['title', 'options'],
+  name: "Options",
+  methods: {
+    select: function select(option) {
+      if (option !== '') {
+        this.$root.$emit('selected', option);
+      }
     }
   }
 });
@@ -54861,65 +54910,35 @@ var render = function() {
       },
       _vm._l(_vm.messages, function(message, key) {
         return _c("div", { staticClass: "col-md-12" }, [
-          !message.status
-            ? _c(
-                "div",
-                {
-                  class:
-                    _vm.myMessage(message.user.id) +
-                    " media chat-message position-sticky d-inline-block overflow-auto p-2 m-2 shadow-none rounded border message_" +
-                    key,
-                  staticStyle: { width: "auto" },
-                  on: {
-                    mouseover: function($event) {
-                      return _vm.shadow(1, key)
-                    },
-                    mouseleave: function($event) {
-                      return _vm.shadow(0, key)
-                    }
-                  }
+          _c(
+            "div",
+            {
+              staticClass:
+                "media chat-message position-sticky d-inline-block overflow-auto p-2 m-2 shadow-none rounded border",
+              staticStyle: { width: "auto" },
+              on: {
+                mouseover: function($event) {
+                  return _vm.shadow(1, key)
                 },
-                [
-                  _c(
-                    "p",
-                    { staticClass: "media-body mb-0 small text-gray-dark" },
-                    [
-                      _c("span", { staticClass: "d-block" }, [
-                        _vm.hideMyName(message.user.id)
-                          ? _c(
-                              "b",
-                              { staticClass: "font-weight-bold" },
-                              [
-                                _c("fa", {
-                                  class:
-                                    "fa fa-circle " +
-                                    _vm.online(message.user.id)
-                                }),
-                                _vm._v(" " + _vm._s(message.user.name))
-                              ],
-                              1
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c("small", { staticClass: "font-italic" }, [
-                          _vm._v(
-                            _vm._s(
-                              _vm
-                                .moment(message.created_at)
-                                .format("MMM Do YYYY, h:mm a")
-                            )
-                          )
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "font-weight-normal" }, [
-                        _vm._v(_vm._s(message.message) + " ")
-                      ])
-                    ]
-                  )
-                ]
-              )
-            : _vm._e()
+                mouseleave: function($event) {
+                  return _vm.shadow(0, key)
+                }
+              }
+            },
+            [
+              _c("p", { staticClass: "media-body mb-0 small text-gray-dark" }, [
+                _c("span", { staticClass: "d-block" }, [
+                  _c("small", { staticClass: "font-italic" }, [
+                    _vm._v(_vm._s(message.sender))
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "font-weight-normal" }, [
+                  _vm._v(_vm._s(message.message) + " ")
+                ])
+              ])
+            ]
+          )
         ])
       }),
       0
@@ -54979,8 +54998,6 @@ var render = function() {
     "div",
     { staticClass: "form-group" },
     [
-      _c("label", [_vm._v("Airline *")]),
-      _vm._v(" "),
       _c("v-autocomplete", {
         attrs: {
           items: _vm.items,
@@ -55026,8 +55043,6 @@ var render = function() {
     "div",
     { staticClass: "form-group" },
     [
-      _c("label", [_vm._v("Airport *")]),
-      _vm._v(" "),
       _c("v-autocomplete", {
         attrs: {
           items: _vm.items,
@@ -55085,7 +55100,7 @@ var render = function() {
           id: "btn-input",
           type: "text",
           name: "message",
-          placeholder: "Type your message here..."
+          placeholder: this.title + " ..."
         },
         domProps: { value: _vm.message },
         on: {
@@ -55131,6 +55146,48 @@ var render = function() {
         )
       : _vm._e()
   ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inputs/Options.vue?vue&type=template&id=0e4e713a&scoped=true&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/inputs/Options.vue?vue&type=template&id=0e4e713a&scoped=true& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticStyle: { "max-width": "100%", overflow: "auto" } },
+    _vm._l(this.options, function(option, key) {
+      return _c(
+        "button",
+        {
+          staticClass: "btn-sm btn btn-outline-primary mr-1 ml-1",
+          on: {
+            click: function($event) {
+              return _vm.select(option)
+            }
+          }
+        },
+        [_vm._v(_vm._s(option.title))]
+      )
+    }),
+    0
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -72577,6 +72634,126 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/actions.js":
+/*!*********************************!*\
+  !*** ./resources/js/actions.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var actions = {
+  welcome: {
+    title: 'Hello dear. What will you like us to do for you today?',
+    input: 'options',
+    data: {
+      title: 'Click on one',
+      options: [{
+        action: 'book-flight',
+        title: 'Book Flight',
+        message: 'I will like to book a flight today'
+      }, {
+        action: 'book-hotel',
+        title: 'Book Hotel',
+        message: 'I will like to book a hotel today'
+      }]
+    }
+  },
+  destination: {
+    title: 'Where are you going to ?',
+    input: 'airport',
+    data: {
+      'title': 'Select an airport'
+    }
+  },
+  departure: {
+    title: 'Where are you leaving from?',
+    input: 'airport',
+    data: {
+      'title': 'Select and airport'
+    }
+  },
+  departure_date: {
+    title: 'When are you leaving?',
+    input: 'date',
+    data: {
+      'title': 'Select a date'
+    }
+  },
+  return: {
+    title: 'Will you like us to reserve a return ticket for you',
+    input: 'options',
+    data: {
+      title: 'Select an option',
+      options: [{
+        action: 'yes',
+        title: 'Yes',
+        message: 'I want a return ticket'
+      }, {
+        action: 'no',
+        title: 'No',
+        message: 'I do not want a return ticket'
+      }]
+    }
+  },
+  return_date: {
+    title: 'When are you coming back?',
+    input: 'date',
+    data: {
+      title: 'Select a date'
+    }
+  },
+  airline: {
+    title: 'Do you have an airline in mind?',
+    input: 'options',
+    data: {
+      title: 'Select an option',
+      options: [{
+        action: 'yes',
+        title: 'Yes',
+        message: 'I do'
+      }, {
+        action: 'no',
+        title: 'No',
+        message: 'I do not'
+      }]
+    }
+  },
+  preferred_airline: {
+    title: 'Select an airline',
+    input: 'airline',
+    data: {
+      title: 'Select and airline'
+    }
+  },
+  cabin: {
+    title: 'Do you have a cabin in mind?',
+    input: 'options',
+    data: {
+      title: 'Select an option',
+      options: [{
+        action: 'economy',
+        title: 'Economy',
+        message: 'M'
+      }, {
+        action: 'first',
+        title: 'First Class',
+        message: 'F'
+      }, {
+        action: 'business',
+        title: 'Business Class',
+        message: 'C'
+      }, {
+        action: 'premium',
+        title: 'Yes',
+        message: 'W'
+      }]
+    }
+  }
+};
+module.exports = actions;
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -72641,8 +72818,11 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   data: function data() {
     return {
       users: [],
-      api_url: Object({"MIX_PUSHER_APP_CLUSTER":"mt1","MIX_PUSHER_APP_KEY":"","NODE_ENV":"development"}).TRAVEL_SUPPLIER_API + '/v' + Object({"MIX_PUSHER_APP_CLUSTER":"mt1","MIX_PUSHER_APP_KEY":"","NODE_ENV":"development"}).TRAVEL_SUPPLIER_API_VERSION
+      api_url: 'http://localhost:8081/v1'
     };
+  },
+  created: function created() {
+    console.log(this.$data.api_url);
   },
   components: {
     ChatBot: _components_ChatBot_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
@@ -72993,6 +73173,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/inputs/Options.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/components/inputs/Options.vue ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Options_vue_vue_type_template_id_0e4e713a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Options.vue?vue&type=template&id=0e4e713a&scoped=true& */ "./resources/js/components/inputs/Options.vue?vue&type=template&id=0e4e713a&scoped=true&");
+/* harmony import */ var _Options_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Options.vue?vue&type=script&lang=js& */ "./resources/js/components/inputs/Options.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Options_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Options_vue_vue_type_template_id_0e4e713a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Options_vue_vue_type_template_id_0e4e713a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "0e4e713a",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/inputs/Options.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/inputs/Options.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/inputs/Options.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Options_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Options.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inputs/Options.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Options_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/inputs/Options.vue?vue&type=template&id=0e4e713a&scoped=true&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/inputs/Options.vue?vue&type=template&id=0e4e713a&scoped=true& ***!
+  \***********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Options_vue_vue_type_template_id_0e4e713a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Options.vue?vue&type=template&id=0e4e713a&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/inputs/Options.vue?vue&type=template&id=0e4e713a&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Options_vue_vue_type_template_id_0e4e713a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Options_vue_vue_type_template_id_0e4e713a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/plugins/Airlinesitemtemplate.vue":
 /*!******************************************************************!*\
   !*** ./resources/js/components/plugins/Airlinesitemtemplate.vue ***!
@@ -73146,9 +73395,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inputs_Airline_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/inputs/Airline.vue */ "./resources/js/components/inputs/Airline.vue");
 /* harmony import */ var _components_inputs_Airport_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/inputs/Airport.vue */ "./resources/js/components/inputs/Airport.vue");
 /* harmony import */ var _components_inputs_Message_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/inputs/Message.vue */ "./resources/js/components/inputs/Message.vue");
+/* harmony import */ var _components_inputs_Options_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/inputs/Options.vue */ "./resources/js/components/inputs/Options.vue");
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
 
 
 
@@ -73167,6 +73418,11 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
     path: '/message',
     name: 'message',
     component: _components_inputs_Message_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+    props: true
+  }, {
+    path: '/options',
+    name: 'options',
+    component: _components_inputs_Options_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
     props: true
   }]
 }));

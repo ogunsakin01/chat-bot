@@ -5,11 +5,13 @@ Vue.use(VueRouter);
 import Airline from './components/inputs/Airline.vue'
 import Airport from './components/inputs/Airport.vue'
 import Message from './components/inputs/Message.vue'
+import Options from './components/inputs/Options.vue'
 
 export default new VueRouter({
    routes:[
        {path: '/airline', name: 'airline', component: Airline, props: true},
        {path: '/airport', name: 'airport', component: Airport, props: true},
-       {path: '/message', name: 'message', component: Message, props: true}
+       {path: '/message', name: 'message', component: Message, props: true},
+       {path: '/options', name: 'options', component: Options, props: true},
    ]
 });

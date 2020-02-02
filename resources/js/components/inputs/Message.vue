@@ -2,7 +2,7 @@
     <div>
     <div class="input-group">
         <input id="btn-input" type="text" name="message" @input="validateMessage"
-               class="form-control input-sm" placeholder="Type your message here..." v-model="message"
+               class="form-control input-sm" :placeholder="this.title+' ...'" v-model="message"
                @keyup.enter="sendMessage"/>
         <span class="input-group-btn">
            <button class="btn btn-primary btn-group btn-block" id="btn-chat" @click="sendMessage">

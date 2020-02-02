@@ -7,12 +7,12 @@
         </div>
         <div class="chat row" v-chat-scroll>
             <div v-for="message,key in messages" class="col-md-12">
-                <div :class="myMessage(message.user.id)+' media chat-message position-sticky d-inline-block overflow-auto p-2 m-2 shadow-none rounded border message_' +(key)"
-                     @mouseover="shadow(1,key)" @mouseleave="shadow(0,key)" v-if="!message.status" style="width: auto;">
+                <div
+                    class="media chat-message position-sticky d-inline-block overflow-auto p-2 m-2 shadow-none rounded border"
+                    @mouseover="shadow(1,key)" @mouseleave="shadow(0,key)" style="width: auto;">
                     <p class="media-body mb-0 small text-gray-dark">
                 <span class="d-block">
-                   <b class="font-weight-bold" v-if="hideMyName(message.user.id)"><fa :class="'fa fa-circle ' + online(message.user.id)"></fa> {{ message.user.name }}</b>
-                    <small class="font-italic">{{ moment(message.created_at).format('MMM Do YYYY, h:mm a') }}</small>
+                    <small class="font-italic">{{ message.sender }}</small>
                 </span>
                         <span class="font-weight-normal">{{ message.message }} </span>
                     </p>
@@ -21,19 +21,14 @@
         </div>
         <div class="my-3 p-3 bg-white rounded shadow-sm">
             <router-view></router-view>
-<!--            <airline @airline="saveAirline(airline)" :title="message"></airline>-->
-<!--            <airport @airport="saveAirport(airport)" :title="message"></airport>-->
-<!--            <message @message="saveMessage(message)" :title="message"></message>-->
         </div>
     </div>
 </template>
 
 <script>
-    // import Airline from "./inputs/Airline";
-    // import Airport from "./inputs/Airport";
-    // import Message from "./inputs/Message";
+    const actions = require('./../actions')
+
     export default {
-        // components: {Message, Airport, Airline},
         data() {
             return {
                 flight: {
@@ -49,28 +44,30 @@
                         "no_of_adult": 0,
                         "no_of_child": 0,
                         "no_of_infant": 0,
-                        "preferred_airline_code" : "",
-                        "calendar" : false,
+                        "preferred_airline_code": "",
+                        "calendar": false,
                         "cabin": "All"
                     }
                 },
+                user: 'User',
+                messages: [],
                 message: {
-                    'sender' : '',
-                    'title' : '',
-                    'message' : '',
-                    'data' : {}
+                    sender: '',
+                    message: ''
                 },
-                messages : [],
                 error: {
                     status: false,
                     message: ''
-                }
+                },
+                process: 'welcome'
             }
         },
-        mounted(){
+        mounted() {
+            this.start()
             this.$root.$on('airport', this.saveAirport)
-            this.$root.$on('airline', this.saveAirport)
-            this.$root.$on('message', this.saveAirport)
+            this.$root.$on('airline', this.saveAirline)
+            this.$root.$on('message', this.saveMessage)
+            this.$root.$on('selected', this.saveSelected)
         },
         methods: {
             shadow(status, key) {
@@ -80,15 +77,34 @@
                     $('.message_' + key).addClass("shadow")
                 $('.message_' + key).removeClass("shadow-none")
             },
-            saveAirport(airport){
-
+            start() {
+                let process = actions[this.$data.process]
+                this.messages.push({
+                    sender: 'Bot',
+                    message: process.title
+                })
+                this.$router.push({
+                    name: process.input,
+                    params: process.data
+                })
             },
-            saveAirline(airline){
-
+            saveAirport(airport) {
+                console.log(airport)
             },
-            saveMessage(message){
-
-            }
+            saveAirline(airline) {
+                console.log(airline)
+            },
+            saveMessage(message) {
+                console.log(message)
+            },
+            saveSelected(option) {
+                this.messages.push({
+                    sender: this.user,
+                    message: option.message,
+                })
+                this.process = option.action
+                this.start()
+            },
         }
     }
 </script>

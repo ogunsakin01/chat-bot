@@ -51,8 +51,11 @@ const app = new Vue({
     data() {
         return {
             users : [],
-            api_url : process.env.TRAVEL_SUPPLIER_API+'/v'+process.env.TRAVEL_SUPPLIER_API_VERSION
+            api_url : 'http://localhost:8081/v1'
         }
+    },
+    created(){
+        console.log(this.$data.api_url)
     },
     components: {
         ChatBot
